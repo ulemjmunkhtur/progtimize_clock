@@ -48,7 +48,7 @@ def callback():
     state = session['state']
     
     flow = Flow.from_client_secrets_file('credentials.json', SCOPES, state=state)
-    flow.redirect_uri = url_for('callback', _external=True)
+    flow.redirect_uri = url_for('callback', _external=True)  # Should result in http://127.0.0.1:80/callback
     
     authorization_response = request.url
     flow.fetch_token(authorization_response=authorization_response)
@@ -58,4 +58,5 @@ def callback():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80)
+    app.run()  # Remove host and port parameters
+
