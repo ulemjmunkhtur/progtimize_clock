@@ -40,10 +40,12 @@ h2 {
     overflow: hidden;
     margin-bottom: 20px;
 }
+.progress-container:first-child .progress-bar {
+    height: 125px; /* 125% of the original height */
+}
 
-/* Making task progress bar different from main */
 .progress-container:not(:first-child) .progress-bar {
-    height: 50px;  /* Task progress bar height */
+    height: 75px; /* 75% of the original height */
 }
 
 .progress {
