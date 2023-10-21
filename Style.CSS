@@ -34,16 +34,18 @@ h2 {
 }
 
 .progress-bar {
-    height: 100px;
+    height: 100px;  /* Main progress bar height */
     background-color: #ced4da;
     border-radius: 7px;
     overflow: hidden;
     margin-bottom: 20px;
 }
+.progress-container:first-child .progress-bar {
+    height: 125px; /* 125% of the original height */
+}
 
-/* Making task progress bar thinner */
 .progress-container:not(:first-child) .progress-bar {
-    height: 47px; /* 2/3 of 70px */
+    height: 75px; /* 75% of the original height */
 }
 
 .progress {
