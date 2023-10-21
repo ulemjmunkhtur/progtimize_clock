@@ -13,36 +13,6 @@ function connectGoogleCalendar(){
 }
 
 
-import { MongoClient } from 'mongodb';
-
-async function connectMongoDB() {
-    const url = "mongodb+srv://client:00000@data.qyp2klj.mongodb.net/Data?retryWrites=true&w=majority";
-    
-    const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
-
-    try {
-        await client.connect();
-        console.log("Connected to MongoDB");
-
-        const db = client.db("Data");
-        const collection = db.collection("events");
-
-        const results = await collection.find({}).toArray();
-        
-        results.forEach((result) => {
-            console.log(result.name);
-        });
-    } catch (err) {
-        console.error("Error:", err);
-    } finally {
-        client.close();
-    }
-}
-
-// Call the function to connect to MongoDB and fetch data
-connectMongoDB();
-
-
 function getFormattedTime(hour, minute, second) {
     return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:${String(second).padStart(2, '0')}`;
 }
