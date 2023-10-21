@@ -1,0 +1,79 @@
+body {
+    font-family: 'Gill Sans', sans-serif;
+    background-color: #f7e1d3;
+    padding: 20px 50px 50px 50px;
+    text-align: center;
+    color: #343a40;
+}
+
+h2 {
+    font-size: 48px;
+    margin-bottom: 15px; /* Increased margin */
+}
+
+.connect-btn, .add-task {
+    background-color: #6c757d;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+
+.connect-btn:hover, .add-task:hover {
+    background-color: #5a6268;
+}
+
+.progress-container {
+    width: 80%;
+    margin: 40px auto;
+    position: relative;
+}
+
+.progress-bar {
+    height: 100px;  /* Main progress bar height */
+    background-color: #ced4da;
+    border-radius: 7px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+.progress-container:first-child .progress-bar {
+    height: 125px; /* 125% of the original height */
+}
+
+.progress-container:not(:first-child) .progress-bar {
+    height: 75px; /* 75% of the original height */
+}
+
+.progress {
+    height: 100%;
+    background-color: #6c757d;
+    transition: width 0.5s;
+}
+
+.time-display {
+    font-size: 48px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.start-end-time {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 20px auto;
+    font-size: 18px;
+}
+
+.custom-time {
+    margin: 20px 0;
+}
+
+.time-format {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
