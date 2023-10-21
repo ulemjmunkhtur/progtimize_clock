@@ -1,6 +1,15 @@
 
-function connectGoogleCalendar() {
-    alert('Connecting to Google Calendar...');
+
+function connectGoogleCalendar(){
+    fetch('/tasks') // Make an HTTP GET request to the server's /tasks endpoint
+    .then(response => response.json())
+    .then(tasks => {
+        // Handle the tasks received from the server (e.g., update the UI)
+        console.log(tasks); // You can work with the tasks array here
+    })
+    .catch(error => {
+        console.error(error);
+    });
 }
 
 function getFormattedTime(hour, minute, second) {
