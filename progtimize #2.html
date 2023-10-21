@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visual Calendar Clock</title>
+    <title>PROGTIMIZE</title>
     <style>
         body {
             font-family: 'Gill Sans', sans-serif;
             background-color: #f8f9fa;
-            padding: 40px;
+            padding: 100px;
             text-align: center;
             color: #343a40;
+        }
+
+        h2 {
+            font-size: 48px; /* Adjusted font size */
         }
 
         .connect-btn, .add-task {
@@ -36,7 +40,7 @@
         }
 
         .progress-bar {
-            height: 20px;
+            height: 30px; /* Made the bar thicker */
             background-color: #ced4da;
             border-radius: 15px;
             overflow: hidden;
@@ -67,22 +71,38 @@
             margin: 20px 0;
         }
 
+        .time-format {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
     </style>
 </head>
 <body>
 
-<h2>Visual Calendar Clock</h2>
+<h2>PROGTIMIZE</h2>
+<p style="font-style: italic; margin-top: -10px;">reinventing the clock</p> <!-- Added subheading -->
+
+<div class="time-format">
+    Time Format:
+    <select id="timeFormat">
+        <option value="24">24-hour (Military)</option>
+        <option value="12">12-hour (Standard)</option>
+    </select>
+</div>
 
 <div class="time-display" id="currentTime"></div>
 
 <div class="custom-time">
+    Task Name: <input type="text" id="taskName"> <!-- Task Name Input -->
     Start: <select id="startHour"></select>:<select id="startMinute"></select>
     End: <select id="endHour"></select>:<select id="endMinute"></select>
     <button class="add-task" onclick="addTask()">Add Task</button>
 </div>
 
 <div class="progress-container">
-    <div class="progress-bar">
+    <div class="progress-bar" id="mainProgressBar"> <!-- Added ID for this main bar -->
         <div class="progress" id="dayProgress"></div>
     </div>
     <div class="start-end-time">
@@ -98,6 +118,17 @@
         alert('Connecting to Google Calendar...');
     }
 
+    function getFormattedTime(hour, minute, format = "24") {
+        hour = parseInt(hour);
+        minute = parseInt(minute);
+        if (format === "12") {
+            const suffix = hour >= 12 ? 'PM' : 'AM';
+            hour = hour % 12 || 12;
+            return `${hour}:${String(minute).padStart(2, '0')} ${suffix}`;
+        }
+        return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+    }
+
     function updateProgressBar() {
         const now = new Date();
         const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -109,11 +140,12 @@
         const progressPercentage = (elapsedSecondsToday / totalSecondsInDay) * 100;
         document.getElementById('dayProgress').style.width = progressPercentage + '%';
 
-        // Display current time
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-        document.getElementById('currentTime').textContent = `${hours}:${minutes}:${seconds}`;
+        const format = document.getElementById('timeFormat').value;
+        document.getElementById('currentTime').textContent = getFormattedTime(now.getHours(), now.getMinutes(), format);
+        
+        // Adjust start and end time based on format
+        document.querySelector('.start-end-time span:first-child').textContent = getFormattedTime(0, 0, format);
+        document.querySelector('.start-end-time span:last-child').textContent = getFormattedTime(23, 59, format);
     }
 
     function populateDropdowns() {
@@ -129,7 +161,7 @@
             });
         }
 
-        for (let i = 0; i <= 59; i++) {
+        for (let i = 0; i <= 59; i += 10) { // Adjusted to 10s
             minuteDropdowns.forEach(dropdown => {
                 const option = document.createElement('option');
                 option.value = i;
@@ -140,27 +172,34 @@
     }
 
     function addTask() {
+        const taskName = document.getElementById('taskName').value || 'Unnamed Task';
         const startHour = document.getElementById('startHour').value;
         const startMinute = document.getElementById('startMinute').value;
         const endHour = document.getElementById('endHour').value;
         const endMinute = document.getElementById('endMinute').value;
 
+        const format = document.getElementById('timeFormat').value;
+
         const taskElement = document.createElement('div');
         taskElement.className = 'progress-container';
+
+        const taskLabel = document.createElement('h4');
+        taskLabel.textContent = taskName;
+        taskElement.appendChild(taskLabel);
 
         const progressBar = document.createElement('div');
         progressBar.className = 'progress-bar';
 
         const progress = document.createElement('div');
         progress.className = 'progress';
-
         progressBar.appendChild(progress);
+
         taskElement.appendChild(progressBar);
 
         const startTimeElement = document.createElement('span');
-        startTimeElement.textContent = `${startHour}:${startMinute}`;
+        startTimeElement.textContent = getFormattedTime(startHour, startMinute, format);
         const endTimeElement = document.createElement('span');
-        endTimeElement.textContent = `${endHour}:${endMinute}`;
+        endTimeElement.textContent = getFormattedTime(endHour, endMinute, format);
 
         const timeContainer = document.createElement('div');
         timeContainer.className = 'start-end-time';
@@ -170,6 +209,8 @@
 
         document.body.insertBefore(taskElement, document.querySelector('.connect-btn'));
     }
+
+    document.getElementById('timeFormat').addEventListener('change', updateProgressBar);
 
     updateProgressBar();  // Initial call
     setInterval(updateProgressBar, 1000);  // Update every second
