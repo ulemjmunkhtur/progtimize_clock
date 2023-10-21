@@ -7,6 +7,13 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
 
+from flask import Flask
+from flask_sslify import SSLify
+
+app = Flask(__name__)
+
+
+
 app = Flask(__name__)
 app.secret_key = 'rfbjhiwrnfxiuwehndfhiuwen34'  # Change this to a secret value
 
@@ -68,6 +75,11 @@ def callback():
         return redirect(url_for('index'))
     except Exception as e:
         return f"Error in callback: {str(e)}"
+
+
+# Enable HTTPS for the app
+if 'DYNO' in os.environ:  # Heroku environment variable
+    sslify = SSLify(app)
 
 if __name__ == '__main__':
     app.run()
