@@ -29,6 +29,15 @@
             margin-top: 20px;
         }
 
+            #mainProgressBar {
+            height: 40px; /* adjust as necessary */
+        }
+
+        .progress-container:not(:first-child) .progress-bar {
+            height: 20px; /* adjust as necessary */
+        }
+
+
         .connect-btn:hover, .add-task:hover {
             background-color: #5a6268;
         }
@@ -118,15 +127,16 @@
         alert('Connecting to Google Calendar...');
     }
 
-    function getFormattedTime(hour, minute, format = "24") {
-        hour = parseInt(hour);
-        minute = parseInt(minute);
-        if (format === "12") {
-            const suffix = hour >= 12 ? 'PM' : 'AM';
-            hour = hour % 12 || 12;
-            return `${hour}:${String(minute).padStart(2, '0')} ${suffix}`;
-        }
-        return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+   function getFormattedTime(hour, minute, second, format = "24") {
+    hour = parseInt(hour);
+    minute = parseInt(minute);
+    second = parseInt(second);
+    if (format === "12") {
+        const suffix = hour >= 12 ? 'PM' : 'AM';
+        hour = hour % 12 || 12;
+        return `${hour}:${String(minute).padStart(2, '0')}:${String(second).padStart(2, '0')} ${suffix}`;
+    }
+        return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:${String(second).padStart(2, '0')}`;
     }
 
     function updateProgressBar() {
@@ -141,11 +151,26 @@
         document.getElementById('dayProgress').style.width = progressPercentage + '%';
 
         const format = document.getElementById('timeFormat').value;
-        document.getElementById('currentTime').textContent = getFormattedTime(now.getHours(), now.getMinutes(), format);
+        document.getElementById('currentTime').textContent = getFormattedTime(now.getHours(), now.getMinutes(), now.getSeconds(), format);
         
         // Adjust start and end time based on format
         document.querySelector('.start-end-time span:first-child').textContent = getFormattedTime(0, 0, format);
         document.querySelector('.start-end-time span:last-child').textContent = getFormattedTime(23, 59, format);
+
+        document.querySelectorAll('.progress-container:not(:first-child)').forEach(taskElement => {
+        const [startElement, endElement] = taskElement.querySelectorAll('.start-end-time span');
+        const startParts = startElement.textContent.split(':');
+        const endParts = endElement.textContent.split(':');
+        
+        const startOfTask = new Date(now.getFullYear(), now.getMonth(), now.getDate(), ...startParts);
+        const endOfTask = new Date(now.getFullYear(), now.getMonth(), now.getDate(), ...endParts);
+        const taskDuration = (endOfTask - startOfTask) / 1000;
+        const elapsedTaskTime = Math.max(0, (now - startOfTask) / 1000);
+        const taskProgressPercentage = (elapsedTaskTime / taskDuration) * 100;
+
+        taskElement.querySelector('.progress').style.width = taskProgressPercentage + '%';
+    });
+
     }
 
     function populateDropdowns() {
@@ -208,6 +233,15 @@
         taskElement.appendChild(timeContainer);
 
         document.body.insertBefore(taskElement, document.querySelector('.connect-btn'));
+
+        // Calculate progress for task
+        const startOfTask = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, startMinute);
+        const endOfTask = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHour, endMinute);
+        const taskDuration = (endOfTask - startOfTask) / 1000;
+        const elapsedTaskTime = Math.max(0, (now - startOfTask) / 1000);
+        const taskProgressPercentage = (elapsedTaskTime / taskDuration) * 100;
+        progress.style.width = taskProgressPercentage + '%';
+
     }
 
     document.getElementById('timeFormat').addEventListener('change', updateProgressBar);
