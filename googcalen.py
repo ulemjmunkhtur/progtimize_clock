@@ -12,6 +12,9 @@ app.secret_key = 'rfbjhiwrnfxiuwehndfhiuwen34'  # Change this to a secret value
 
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
+# Set the base URL for your application
+BASE_URL = 'https://progtimizeclock.study'
+
 @app.route('/')
 def index():
     if 'credentials' not in session:
@@ -31,11 +34,10 @@ def index():
 
     return '<br>'.join([event['summary'] for event in events])
 
-
 @app.route('/authorize')
 def authorize():
     flow = Flow.from_client_secrets_file('credentials.json', SCOPES)
-    flow.redirect_uri = url_for('callback', _external=True)
+    flow.redirect_uri = f'{BASE_URL}/callback'  # Use the HTTPS version of the callback URL
     authorization_url, state = flow.authorization_url(
         access_type='offline',
         include_granted_scopes='true')
@@ -48,7 +50,7 @@ def callback():
     state = session['state']
     
     flow = Flow.from_client_secrets_file('credentials.json', SCOPES, state=state)
-    flow.redirect_uri = url_for('callback', _external=True)  # Should result in http://127.0.0.1:80/callback
+    flow.redirect_uri = f'{BASE_URL}/callback'  # Use the HTTPS version of the callback URL
     
     authorization_response = request.url
     flow.fetch_token(authorization_response=authorization_response)
@@ -59,4 +61,3 @@ def callback():
 
 if __name__ == '__main__':
     app.run()  # Remove host and port parameters
-
