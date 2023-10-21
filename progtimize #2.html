@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Calendar Clock</title>
+    <style>
+        body {
+            font-family: 'Gill Sans', sans-serif;
+            background-color: #f8f9fa;
+            padding: 40px;
+            text-align: center;
+            color: #343a40;
+        }
+
+        .connect-btn, .add-task {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        .connect-btn:hover, .add-task:hover {
+            background-color: #5a6268;
+        }
+
+        .progress-container {
+            width: 80%;
+            margin: 40px auto;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background-color: #ced4da;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: #6c757d;
+            transition: width 0.5s;
+        }
+
+        .time-display {
+            font-size: 48px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .start-end-time {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            margin: 20px auto;
+            font-size: 18px;
+        }
+
+        .custom-time {
+            margin: 20px 0;
+        }
+
+    </style>
+</head>
+<body>
+
+<h2>Visual Calendar Clock</h2>
+
+<div class="time-display" id="currentTime"></div>
+
+<div class="custom-time">
+    Start: <select id="startHour"></select>:<select id="startMinute"></select>
+    End: <select id="endHour"></select>:<select id="endMinute"></select>
+    <button class="add-task" onclick="addTask()">Add Task</button>
+</div>
+
+<div class="progress-container">
+    <div class="progress-bar">
+        <div class="progress" id="dayProgress"></div>
+    </div>
+    <div class="start-end-time">
+        <span>00:00</span>
+        <span>23:59</span>
+    </div>
+</div>
+
+<button class="connect-btn" onclick="connectGoogleCalendar()">Connect to Google Calendar</button>
+
+<script>
+    function connectGoogleCalendar() {
+        alert('Connecting to Google Calendar...');
+    }
+
+    function updateProgressBar() {
+        const now = new Date();
+        const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+        
+        const totalSecondsInDay = (endOfDay - startOfDay) / 1000;
+        const elapsedSecondsToday = (now - startOfDay) / 1000;
+
+        const progressPercentage = (elapsedSecondsToday / totalSecondsInDay) * 100;
+        document.getElementById('dayProgress').style.width = progressPercentage + '%';
+
+        // Display current time
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        document.getElementById('currentTime').textContent = `${hours}:${minutes}:${seconds}`;
+    }
+
+    function populateDropdowns() {
+        const hourDropdowns = [document.getElementById('startHour'), document.getElementById('endHour')];
+        const minuteDropdowns = [document.getElementById('startMinute'), document.getElementById('endMinute')];
+
+        for (let i = 0; i <= 23; i++) {
+            hourDropdowns.forEach(dropdown => {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = String(i).padStart(2, '0');
+                dropdown.appendChild(option);
+            });
+        }
+
+        for (let i = 0; i <= 59; i++) {
+            minuteDropdowns.forEach(dropdown => {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = String(i).padStart(2, '0');
+                dropdown.appendChild(option);
+            });
+        }
+    }
+
+    function addTask() {
+        const startHour = document.getElementById('startHour').value;
+        const startMinute = document.getElementById('startMinute').value;
+        const endHour = document.getElementById('endHour').value;
+        const endMinute = document.getElementById('endMinute').value;
+
+        const taskElement = document.createElement('div');
+        taskElement.className = 'progress-container';
+
+        const progressBar = document.createElement('div');
+        progressBar.className = 'progress-bar';
+
+        const progress = document.createElement('div');
+        progress.className = 'progress';
+
+        progressBar.appendChild(progress);
+        taskElement.appendChild(progressBar);
+
+        const startTimeElement = document.createElement('span');
+        startTimeElement.textContent = `${startHour}:${startMinute}`;
+        const endTimeElement = document.createElement('span');
+        endTimeElement.textContent = `${endHour}:${endMinute}`;
+
+        const timeContainer = document.createElement('div');
+        timeContainer.className = 'start-end-time';
+        timeContainer.appendChild(startTimeElement);
+        timeContainer.appendChild(endTimeElement);
+        taskElement.appendChild(timeContainer);
+
+        document.body.insertBefore(taskElement, document.querySelector('.connect-btn'));
+    }
+
+    updateProgressBar();  // Initial call
+    setInterval(updateProgressBar, 1000);  // Update every second
+    populateDropdowns();  // Populate the hour and minute dropdowns
+
+</script>
+
+</body>
+</html>
