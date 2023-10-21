@@ -89,8 +89,25 @@ function addTask() {
 
     const progress = document.createElement('div');
     progress.className = 'progress';
-    progressBar.appendChild(progress);
 
+    // Calculate the task progress
+    const now = new Date();
+    const startOfTask = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, startMinute, 0);
+    const endOfTask = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHour, endMinute, 0);
+    const taskDuration = (endOfTask - startOfTask) / 1000;
+    const elapsedTaskTime = Math.max(0, (now - startOfTask) / 1000);
+    const taskProgressPercentage = (elapsedTaskTime / taskDuration) * 100;
+    progress.style.width = taskProgressPercentage + '%';
+
+    // Check if the task is unfinished (red) or finished (green)
+    if (taskProgressPercentage < 100) {
+        progress.style.backgroundColor = '#b64747'; // Unfinished tasks are green
+    } else {
+        progress.style.backgroundColor = '#649865'; // Finished tasks are red
+    }
+    
+
+    progressBar.appendChild(progress);
     taskElement.appendChild(progressBar);
 
     const startTimeElement = document.createElement('span');
