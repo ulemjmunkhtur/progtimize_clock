@@ -1,22 +1,13 @@
-
-
-function connectGoogleCalendar(){
-    fetch('/events') // Make an HTTP GET request to the server's /tasks endpoint
-    .then(response => {
-        if(!response.ok){
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(results => {
-        // Handle the tasks received from the server (e.g., update the UI)
-        console.log(results); // You can work with the tasks array here
-    })
-    .catch(error => {
-        console.error(error);
-    });
+function connectGoogleCalendar() {
+    fetch('/tasks')
+        .then(response => response.json())
+        .then(tasks => {
+            console.log(tasks);
+        })
+        .catch(error => {
+            console.error(error);
+        });
 }
-
 
 function getFormattedTime(hour, minute, second) {
     return `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:${String(second).padStart(2, '0')}`;
@@ -48,7 +39,15 @@ function updateProgressBar() {
         const elapsedTaskTime = Math.max(0, (now - startOfTask) / 1000);
         const taskProgressPercentage = (elapsedTaskTime / taskDuration) * 100;
 
-        taskElement.querySelector('.progress').style.width = taskProgressPercentage + '%';
+        const progressElement = taskElement.querySelector('.progress');
+        progressElement.style.width = taskProgressPercentage + '%';
+
+        // Check if the task is unfinished (red) or finished (green)
+        if (taskProgressPercentage >= 100) {
+            progressElement.style.backgroundColor = '#649865'; // Finished tasks are green
+        } else {
+            progressElement.style.backgroundColor = '#b64747'; // Unfinished tasks are red
+        }
     });
 }
 
@@ -65,7 +64,7 @@ function populateDropdowns() {
         });
     }
 
-    for (let i = 0; i <= 59; i++) { // All minute options
+    for (let i = 0; i <= 59; i++) {
         minuteDropdowns.forEach(dropdown => {
             const option = document.createElement('option');
             option.value = i;
@@ -94,23 +93,6 @@ function addTask() {
 
     const progress = document.createElement('div');
     progress.className = 'progress';
-
-    // Calculate the task progress
-    const now = new Date();
-    const startOfTask = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, startMinute, 0);
-    const endOfTask = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHour, endMinute, 0);
-    const taskDuration = (endOfTask - startOfTask) / 1000;
-    const elapsedTaskTime = Math.max(0, (now - startOfTask) / 1000);
-    const taskProgressPercentage = (elapsedTaskTime / taskDuration) * 100;
-    progress.style.width = taskProgressPercentage + '%';
-
-    // Check if the task is unfinished (red) or finished (green)
-    if (taskProgressPercentage >= 100) {
-        progress.style.backgroundColor = '#649865'; // Finished tasks are green
-    } else {
-        progress.style.backgroundColor = '#b64747'; // Unfinished tasks are red
-    }
-
     progressBar.appendChild(progress);
     taskElement.appendChild(progressBar);
 
@@ -128,26 +110,8 @@ function addTask() {
     taskElement.appendChild(timeContainer);
 
     document.body.appendChild(taskElement);
-
-    // Check and update the task's color when the progress reaches 100%
-    if (taskProgressPercentage >= 100) {
-        progress.style.backgroundColor = '#649865'; // Change to green if already completed
-    } else {
-        // Set up an interval to check and update the task's color in real-time
-        const checkTaskStatusInterval = setInterval(() => {
-            const now = new Date();
-            const elapsedTaskTime = Math.max(0, (now - startOfTask) / 1000);
-            const taskProgressPercentage = (elapsedTaskTime / taskDuration) * 100;
-            
-            if (taskProgressPercentage >= 100) {
-                progress.style.backgroundColor = '#649865'; // Change to green when 100% is reached
-                clearInterval(checkTaskStatusInterval); // Stop checking once it's green
-            }
-        }, 1000);
-    }
 }
-
 
 populateDropdowns();
 updateProgressBar();
-setInterval(updateProgressBar, 1000);  // Update every second
+setInterval(updateProgressBar, 1000); // Update every second
