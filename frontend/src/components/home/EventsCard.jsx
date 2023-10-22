@@ -123,7 +123,7 @@ function updateProgressBar() {
   document.getElementById('dayProgress').style.width = progressPercentage + '%';
 
   const currentTime = document.getElementById('currentTime');
-  currentTime.textContent = getFormattedTime(now.getHours(), now.getMinutes(), now.getSeconds);
+  currentTime.textContent = getFormattedTime(now.getHours(), now.getMinutes(), now.getSeconds());
 
   // Task progress update
   document.querySelectorAll('.progress-container:not(:first-child)').forEach(taskElement => {
@@ -172,10 +172,6 @@ function populateDropdowns() {
   }
 }
 
-function connectGoogleCalendar() {
-  // Your logic for connecting to Google Calendar here
-}
-
 function addTask() {
   // Your logic for adding a task here
   const taskName = document.getElementById('taskName').value || 'Unnamed Task';
@@ -215,6 +211,44 @@ function addTask() {
     document.body.appendChild(taskElement);
 }
 
+function createTaskFromGoogle(item){
+      const taskName = item.name;
+      const startHour = item.start / 100;
+      const startMinute = item.start % 100;
+      const endHour = item.end / 100;
+      const endMinute = item.end % 100;
+  
+      const taskElement = document.createElement('div');
+      taskElement.className = 'progress-container';
+  
+      const taskLabel = document.createElement('h4');
+      taskLabel.textContent = taskName;
+      taskElement.appendChild(taskLabel);
+  
+      const progressBar = document.createElement('div');
+      progressBar.className = 'progress-bar';
+  
+      const progress = document.createElement('div');
+      progress.className = 'progress';
+      progressBar.appendChild(progress);
+      taskElement.appendChild(progressBar);
+  
+      const startTimeElement = document.createElement('span');
+      startTimeElement.textContent = getFormattedTime(startHour, startMinute, 0);
+  
+      const endTimeElement = document.createElement('span');
+      endTimeElement.textContent = getFormattedTime(endHour, endMinute, 0);
+  
+      const timeContainer = document.createElement('div');
+      timeContainer.className = 'start-end-time';
+      timeContainer.appendChild(startTimeElement);
+      timeContainer.appendChild(endTimeElement);
+  
+      taskElement.appendChild(timeContainer);
+  
+      document.body.appendChild(taskElement);
+}
+
 const EventsCard = ({ events }) => {
   useEffect(() => {
     // Initial call to functions
@@ -229,6 +263,13 @@ const EventsCard = ({ events }) => {
       clearInterval(intervalId);
     };
   }, []);
+
+  function connectGoogleCalendar() {
+    // Your logic for connecting to Google Calendar here
+    events.map((item) => (
+      createTaskFromGoogle(item)
+              ));
+  }
 
   return (
     // Your JSX content here
