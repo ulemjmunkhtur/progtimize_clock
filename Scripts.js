@@ -72,10 +72,10 @@ function populateDropdowns() {
 
 function addTask() {
     const taskName = document.getElementById('taskName').value || 'Unnamed Task';
-    const startHour = document.getElementById('startHour').value;
-    const startMinute = document.getElementById('startMinute').value;
-    const endHour = document.getElementById('endHour').value;
-    const endMinute = document.getElementById('endMinute').value;
+    const startHour = parseInt(document.getElementById('startHour').value);
+    const startMinute = parseInt(document.getElementById('startMinute').value);
+    const endHour = parseInt(document.getElementById('endHour').value);
+    const endMinute = parseInt(document.getElementById('endMinute').value);
 
     const taskElement = document.createElement('div');
     taskElement.className = 'progress-container';
@@ -100,12 +100,11 @@ function addTask() {
     progress.style.width = taskProgressPercentage + '%';
 
     // Check if the task is unfinished (red) or finished (green)
-    if (taskProgressPercentage < 100) {
-        progress.style.backgroundColor = '#b64747'; // Unfinished tasks are green
+    if (taskProgressPercentage >= 100) {
+        progress.style.backgroundColor = '#649865'; // Finished tasks are green
     } else {
-        progress.style.backgroundColor = '#649865'; // Finished tasks are red
+        progress.style.backgroundColor = '#b64747'; // Unfinished tasks are red
     }
-    
 
     progressBar.appendChild(progress);
     taskElement.appendChild(progressBar);
@@ -124,7 +123,25 @@ function addTask() {
     taskElement.appendChild(timeContainer);
 
     document.body.appendChild(taskElement);
+
+    // Check and update the task's color when the progress reaches 100%
+    if (taskProgressPercentage >= 100) {
+        progress.style.backgroundColor = '#649865'; // Change to green if already completed
+    } else {
+        // Set up an interval to check and update the task's color in real-time
+        const checkTaskStatusInterval = setInterval(() => {
+            const now = new Date();
+            const elapsedTaskTime = Math.max(0, (now - startOfTask) / 1000);
+            const taskProgressPercentage = (elapsedTaskTime / taskDuration) * 100;
+            
+            if (taskProgressPercentage >= 100) {
+                progress.style.backgroundColor = '#649865'; // Change to green when 100% is reached
+                clearInterval(checkTaskStatusInterval); // Stop checking once it's green
+            }
+        }, 1000);
+    }
 }
+
 
 populateDropdowns();
 updateProgressBar();
