@@ -1,23 +1,15 @@
+The digital clocks we typically use don't help people visualize the passing of time. Recent research by the Association for Computing Machinery, titled "Towards Accessible Remote Work: Understanding Work-from-Home Practices of Neurodivergent Professionals'' (published on 22 April 2021), delved into the unique challenges faced by neurodivergent professionals working from home. A notable observation was the strategies these individuals employ to cope with time agnosia. For instance, one participant used a peripheral timer or clock to maintain a heightened awareness of time so she didn't lose track of it.  
 
-The digital clocks we typically use doesnt help people visualize the passing of time. Recent research by the Association for Computing Machinery, titled "Towards Accessible Remote Work: Understanding Work-from-Home Practices of Neurodivergent Professionals'' (published on 22 April 2021), delved into the unique challenges faced by neurodivergent professionals working from home. A notable observation was the strategies these individuals employ to cope with time agnosia. For instance, one participant used a peripheral timer or clock to maintain a heightened awareness of time so she doesnt lose track of it.  
+If you've ever felt the dissonance of 'time blindness' or “time agnosia”,  you're not alone, especially among those with neurodivergent conditions like ADHD. One of our members is diagnosed with ADHD and experiences this phenomenon daily. 
 
-If you've ever felt the dissonance of 'time blindness' or “time agnosia”,  you're not alone, especially among those with neurodivergent conditions like ADHD. The typical digital clock may not truly resonate with your perception of time. This is where Progtimize steps in! We offer a revolutionary linear digital clock that visualizes the day's progression, complemented by customizable task progress bars. Although there are physical progress clocks that exist, a digital version that is easily accessible is still lacking. Along with adding tasks on the website, you can also import it from your daily calendar with ease! 
+The typical digital clock may not truly resonate with your perception of time. This is where Progtimize Clock steps in! We offer a revolutionary linear digital clock that visualizes the day's progression, complemented by customizable task progress bars. The very existence of physical visual timers shows the demand for a more easily accessible customizable digital version. You can show your day’s events (progress bar starting from your inputted start and end time) and tasks by logging in with your Google calendar. To add more tasks, you can add them straight on the website. Furthermore, you can click on specific events to show another progress bar specifically for that event. It’s the first of its kind. 
 
-From the team:
+Progtimize is a clear improvement of the regular clock. It benefits neurodivergent and neurotypical alike by allowing them to time block better and become more productive people. 
 
-This hackathon marked a significant milestone for our team, as it was not only our inaugural hackathon but also our very first foray into full-stack development. The journey was undoubtedly challenging, yet we embraced the learning curve with determination and perseverance, continually acquiring new skills as we progressed.
+This hackathon marked a significant milestone for our team, as it was not only our first hackathon but also our first time ever trying full-stack development. None of us had ever used frameworks, databases, and servers and had little to no clue where they fit when creating a web app. We each took one part of the stack and tried to commit ourselves to learning it fully through YouTube videos, courses, and implementation. 
 
-Throughout this exciting endeavor, we harnessed an array of powerful tools and technologies, including:
+36 hours ago many of our team members had never used HTML, CSS, JS, React, Node.Js, MongoDB, Express, Google Cloud Server, Google Calendar API, GitHub as a team, and Flask and came out with a significantly better understanding of all of these tools. Our biggest challenge was not knowing how everything fit together and how hard this truly would be. For example, our HTML code had overridden all our other code until the last 8 hours of the hackathon (yes, we realized it at midnight). We had to ask each other for the first few hours “Wait so how do I commit on Github?”
 
-HTML
-CSS
-JavaScript
-React
-Node.js
-MongoDB
-Express
-Google Cloud
-Google Calendar API
-and Flask
+Overall, this was an amazing opportunity to jumpstart our learning on these tools. 
 
-These tools not only empowered us but also enabled us to create innovative solutions and deliver a remarkable performance during the hackathon.
+In the end, we spent significant time on and will continue to develop many features that we couldn’t get done in this timeframe: we used Google Calendar API and received callbacks but didn’t fully figure out how to integrate it back into our database and website. We created a domain with GoDaddy (progtimizeclock.study), started a VM instance in Google Cloud & OAuth Clients, and used an SSH browser heavily, but with Google Cloud’s privacy authentication measure, we’ll likely launch the website in the next week. We ideated many cool features & customization to add to the front end (ex. differentiating between tasks and events, allowing the user to assign colors and click into tasks, option to put a countdown next to the progress bar,  etc.)
