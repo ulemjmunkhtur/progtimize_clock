@@ -1,11 +1,16 @@
 
 
 function connectGoogleCalendar(){
-    fetch('/tasks') // Make an HTTP GET request to the server's /tasks endpoint
-    .then(response => response.json())
-    .then(tasks => {
+    fetch('/events') // Make an HTTP GET request to the server's /tasks endpoint
+    .then(response => {
+        if(!response.ok){
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(results => {
         // Handle the tasks received from the server (e.g., update the UI)
-        console.log(tasks); // You can work with the tasks array here
+        console.log(results); // You can work with the tasks array here
     })
     .catch(error => {
         console.error(error);
